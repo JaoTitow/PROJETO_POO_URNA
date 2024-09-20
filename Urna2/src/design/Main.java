@@ -5,6 +5,7 @@
 package design;
 
 import br.edu.entities.Candidato;
+import javax.swing.ImageIcon;
 
 
 /**
@@ -13,33 +14,51 @@ import br.edu.entities.Candidato;
  */
 public class Main extends javax.swing.JFrame { 
     
-    private Candidato getulioECafe = new Candidato("Getúlio Vargas", "Café Filho", "PTB");
-    private Candidato lulaEHaddad = new Candidato("Luiz Inácio Lula da Silva", "Fernando Haddad", "PT");
+    private Candidato getulioECafe = new Candidato("Getúlio Vargas", "PTB", "Café", "52", "src/images/getulio.jpg", "src/images/café.jpg");
+    private Candidato lulaEHaddad = new Candidato("Lula", "PT", "Haddad", "13", "src/images/lule.jpg", "src/images/haddad.jpg");
     
     private String numeroDigitado = "";
     
-    private void attinfo(Candidato candidato) {
-    nCandidato.setText(candidato.getNPresidente());
-    nVice.setText(candidato.getNVice());
-    nPartido.setText(candidato.getPartido());
-}
     
     private void limparCampos() {
     nCandidato.setText("");
     nVice.setText("");
     nPartido.setText("");
+    
+    Image.setIcon(null);
+    ImageVice.setIcon(null);
 }
     
-    private void verificarNumeroDigitado() {
-    if (numeroDigitado.equals("52")) {
-        attinfo(getulioECafe);  //mostra getulinio
-    } else if (numeroDigitado.equals("13")) {
-        attinfo(lulaEHaddad);  //papai lule 
-    } else if (numeroDigitado.length() == 2) {
-        //nule
-        campoNome.setText("VOTO NULO");
-        limparCampos();
-    }
+    private void verificarNumeroDigitado(String numero) {
+        Candidato candidato = null;
+        
+        if (numero.equals(getulioECafe.getNumero())) {
+            candidato = getulioECafe;
+        } else if (numero.equals(lulaEHaddad.getNumero())) {
+            candidato = lulaEHaddad;
+        }
+    
+    if (candidato != null) {
+            //so atualiza os campo
+            nCandidato.setText(candidato.getNPresidente());
+            nPartido.setText(candidato.getPartido());
+            nVice.setText(candidato.getNVice());
+
+            //vai mudar a fotinha do nosso presidas
+            String caminhoImagemPresidente = candidato.getCaminhoImagem();
+            ImageIcon imagemPresidente = new ImageIcon(caminhoImagemPresidente);
+            java.awt.Image imgPresidente = imagemPresidente.getImage();
+            java.awt.Image imgPresidenteRedimensionada = imgPresidente.getScaledInstance(Image.getWidth(), Image.getHeight(), java.awt.Image.SCALE_SMOOTH);
+            Image.setIcon(new ImageIcon(imgPresidenteRedimensionada));
+            
+            // aq muda aa fotina do vice
+            String caminhoImagemVice = candidato.getCaminhoImagemVice();
+            ImageIcon imagemVice = new ImageIcon(caminhoImagemVice);
+            java.awt.Image imgVice = imagemVice.getImage();
+            java.awt.Image imgViceRedimensionada = imgVice.getScaledInstance(ImageVice.getWidth(), ImageVice.getHeight(), java.awt.Image.SCALE_SMOOTH);
+            ImageVice.setIcon(new ImageIcon(imgViceRedimensionada));
+        }
+    
 }
 
     /**
@@ -49,9 +68,10 @@ public class Main extends javax.swing.JFrame {
         initComponents();
     }
     
-    private void atualizarNumero() {
-        numDig.setText(numeroDigitado);  // Atualiza a label com o número
+    private void attNum() {
+        numDig.setText(numeroDigitado);
     }
+    
     
     
 
@@ -93,7 +113,9 @@ public class Main extends javax.swing.JFrame {
         bConfirma = new javax.swing.JButton();
         bBranco = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
+        Image = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        ImageVice = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1265, 626));
@@ -335,17 +357,26 @@ public class Main extends javax.swing.JFrame {
                     .addGap(38, 38, 38)))
         );
 
-        jLabel3.setText("Imagem");
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+            .addComponent(Image, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+            .addComponent(Image, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(ImageVice, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(ImageVice, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -387,7 +418,9 @@ public class Main extends javax.swing.JFrame {
                                         .addGap(112, 112, 112)
                                         .addComponent(jLabel2)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 256, Short.MAX_VALUE)
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(teclado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())))
@@ -399,7 +432,7 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(layout.createSequentialGroup()
                     .addGap(88, 88, 88)
                     .addComponent(jLabel6)
-                    .addContainerGap(868, Short.MAX_VALUE)))
+                    .addContainerGap(872, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -416,22 +449,24 @@ public class Main extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(campoNumero)
                                     .addComponent(numDig))
-                                .addGap(27, 27, 27))
+                                .addGap(27, 27, 27)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(campoNome)
+                                    .addComponent(nCandidato))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(campoVice)
+                                    .addComponent(nVice))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(campoPartido)
+                                    .addComponent(nPartido))
+                                .addGap(110, 110, 110))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(campoNome)
-                            .addComponent(nCandidato))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(campoVice)
-                            .addComponent(nVice))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(campoPartido)
-                            .addComponent(nPartido))
-                        .addGap(110, 110, 110)
                         .addComponent(instrucoes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(teclado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12)
@@ -452,8 +487,9 @@ public class Main extends javax.swing.JFrame {
     private void b1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b1ActionPerformed
          if (numeroDigitado.length() < 2) {  // Limita a 2 dígitos, por exemplo
             numeroDigitado += "1";
-            atualizarNumero();
-            verificarNumeroDigitado();
+            attNum();
+            verificarNumeroDigitado(numeroDigitado);
+            
         }
     }//GEN-LAST:event_b1ActionPerformed
 
@@ -462,16 +498,16 @@ public class Main extends javax.swing.JFrame {
     private void b2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b2ActionPerformed
         if (numeroDigitado.length() < 2) {
             numeroDigitado += "2";
-            atualizarNumero();
-            verificarNumeroDigitado();
+            attNum();
+            verificarNumeroDigitado(numeroDigitado);
         }
     }//GEN-LAST:event_b2ActionPerformed
 
     private void b3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b3ActionPerformed
         if (numeroDigitado.length() < 2) {
             numeroDigitado += "3";
-            atualizarNumero();
-            verificarNumeroDigitado();
+            attNum();
+            verificarNumeroDigitado(numeroDigitado);
         }
 
     }//GEN-LAST:event_b3ActionPerformed
@@ -479,8 +515,8 @@ public class Main extends javax.swing.JFrame {
     private void b4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b4ActionPerformed
         if (numeroDigitado.length() < 2) {
             numeroDigitado += "4";
-            atualizarNumero();
-            verificarNumeroDigitado();
+            attNum();
+            verificarNumeroDigitado(numeroDigitado);
         }
 
     }//GEN-LAST:event_b4ActionPerformed
@@ -488,48 +524,48 @@ public class Main extends javax.swing.JFrame {
     private void b5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b5ActionPerformed
         if (numeroDigitado.length() < 2) {
             numeroDigitado += "5";
-            atualizarNumero();
-            verificarNumeroDigitado();
+            attNum();
+            verificarNumeroDigitado(numeroDigitado);
         }
     }//GEN-LAST:event_b5ActionPerformed
 
     private void b6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b6ActionPerformed
         if (numeroDigitado.length() < 2) {
             numeroDigitado += "6";
-            atualizarNumero();
-            verificarNumeroDigitado();
+            attNum();
+            verificarNumeroDigitado(numeroDigitado);
         }
     }//GEN-LAST:event_b6ActionPerformed
 
     private void b7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b7ActionPerformed
         if (numeroDigitado.length() < 2) {
             numeroDigitado += "7";
-            atualizarNumero();
-            verificarNumeroDigitado();
+            attNum();
+            verificarNumeroDigitado(numeroDigitado);
         }
     }//GEN-LAST:event_b7ActionPerformed
 
     private void b8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b8ActionPerformed
         if (numeroDigitado.length() < 2) {
             numeroDigitado += "8";
-            atualizarNumero();
-            verificarNumeroDigitado();
+            attNum();
+            verificarNumeroDigitado(numeroDigitado);
         }
     }//GEN-LAST:event_b8ActionPerformed
 
     private void b9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b9ActionPerformed
         if (numeroDigitado.length() < 2) {
             numeroDigitado += "9";
-            atualizarNumero();
-            verificarNumeroDigitado();
+            attNum();
+            verificarNumeroDigitado(numeroDigitado);
         }
     }//GEN-LAST:event_b9ActionPerformed
 
     private void b0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b0ActionPerformed
         if (numeroDigitado.length() < 2) {
             numeroDigitado += "0";
-            atualizarNumero();
-            verificarNumeroDigitado();
+            attNum();
+            verificarNumeroDigitado(numeroDigitado);
         }
     }//GEN-LAST:event_b0ActionPerformed
 
@@ -537,10 +573,8 @@ public class Main extends javax.swing.JFrame {
         numeroDigitado = "";  // Limpa o número
         campoNumero.setText("NÚMERO");
         campoNome.setText("NOME");
-        nCandidato.setText("");
-        nVice.setText("");
-        nPartido.setText("");
-        atualizarNumero();
+        limparCampos();
+        attNum();
     }//GEN-LAST:event_bCorrigeActionPerformed
 
     private void bConfirmaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bConfirmaActionPerformed
@@ -602,6 +636,8 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Image;
+    private javax.swing.JLabel ImageVice;
     private javax.swing.JButton b0;
     private javax.swing.JButton b1;
     private javax.swing.JButton b2;
@@ -622,11 +658,11 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JSeparator instrucoes;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel nCandidato;
     private javax.swing.JLabel nPartido;
     private javax.swing.JLabel nVice;

@@ -11,13 +11,20 @@ package br.edu.entities;
 public class Candidato {
     
     private String nPresidente;
-    private String nVice;
     private String partido;
+    private String nVice;
+    private String numero;
+    private String caminhoImagem;
+    private String caminhoImagemVice;
 
-    public Candidato(String nPresidente, String nVice, String partido) {
+    
+    public Candidato(String nPresidente,String partido, String nVice, String numero, String caminhoImagem, String caminhoImagemVice) {
         this.nPresidente = nPresidente;
-        this.nVice = nVice;
         this.partido = partido;
+        this.nVice = nVice;
+        this.numero = numero;
+        this.caminhoImagem = caminhoImagem;
+        this.caminhoImagemVice = caminhoImagemVice;
     }
 
     public String getNPresidente() {
@@ -30,6 +37,18 @@ public class Candidato {
 
     public String getPartido() {
         return partido;
+    }
+    
+    public String getNumero(){
+        return numero;
+    }
+    
+    public String getCaminhoImagem(){
+        return caminhoImagem;
+    }
+    
+    public String getCaminhoImagemVice(){
+        return caminhoImagemVice;
     }
 
 }
