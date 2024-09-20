@@ -16,6 +16,7 @@ public class Candidato {
     private String numero;
     private String caminhoImagem;
     private String caminhoImagemVice;
+    private int votos;
 
     
     public Candidato(String nPresidente,String partido, String nVice, String numero, String caminhoImagem, String caminhoImagemVice) {
@@ -25,6 +26,7 @@ public class Candidato {
         this.numero = numero;
         this.caminhoImagem = caminhoImagem;
         this.caminhoImagemVice = caminhoImagemVice;
+        this.votos = 0;
     }
 
     public String getNPresidente() {
@@ -49,6 +51,20 @@ public class Candidato {
     
     public String getCaminhoImagemVice(){
         return caminhoImagemVice;
+    }
+    
+    public int getVotos() {
+        return votos;
+    }
+
+    public void setVotos(int votos) {
+        this.votos = votos;
+    }
+    
+    
+    
+    public void addVoto() {
+        this.votos++;
     }
 
 }

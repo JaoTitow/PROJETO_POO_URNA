@@ -4,17 +4,85 @@
  */
 package design;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import javax.swing.Timer;
+
 /**
  *
  * @author joaog
  */
 public class telaFim extends javax.swing.JFrame {
 
+    
+    private DateTimeFormatter formato = DateTimeFormatter.ofPattern("EEEE, dd/MM/yyyy HH:mm:ss");
+    
+    private int votosGetulio;
+    private int votosLula;
     /**
      * Creates new form telaFim
      */
-    public telaFim() {
+    public telaFim(int votosGetulio, int votosLula) {
+        
+        this.votosGetulio = votosGetulio;
+        this.votosLula = votosLula;
         initComponents();
+        
+        addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {}
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_R) {
+                    reiniciarUrna(); 
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {}
+        });
+
+        setFocusable(true);
+        
+        setVotosGetulio(votosGetulio);
+        setVotosLula(votosLula);
+        
+         iniciarAtualizacaoTempo();
+    }
+    
+    private void iniciarAtualizacaoTempo() {
+        Timer timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //pega tempo live
+                LocalDateTime agora = LocalDateTime.now();
+                
+                //a formatação pra dia daa sem + dd/mm/yyyy etc
+                String timeForm = agora.format(formato);
+                Time.setText(timeForm);
+            }
+        });
+        timer.start(); 
+    }
+    
+    private void reiniciarUrna() {
+        System.out.println("Reiniciando a urna...");
+        this.dispose();
+        Main novaTelaPrincipal = new Main(votosGetulio, votosLula);
+        novaTelaPrincipal.setVisible(true);
+    }
+    
+    public void setVotosGetulio(int votos) {
+        lblVotosGetulio.setText("Getúlio: " + votos + " votos");
+    }
+    
+    public void setVotosLula(int votos) {
+        lblVotosLula.setText("Lula: " + votos + " votos");
     }
 
     /**
@@ -28,10 +96,12 @@ public class telaFim extends javax.swing.JFrame {
 
         fimLabel = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        lblVotosGetulio = new javax.swing.JLabel();
+        lblVotosLula = new javax.swing.JLabel();
+        Time = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new java.awt.Dimension(1265, 626));
-        setPreferredSize(new java.awt.Dimension(1265, 626));
+        setMinimumSize(new java.awt.Dimension(1700, 800));
         setResizable(false);
 
         fimLabel.setFont(new java.awt.Font("Segoe UI", 1, 100)); // NOI18N
@@ -43,27 +113,45 @@ public class telaFim extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(153, 153, 153));
         jLabel1.setText("VOTOU");
 
+        lblVotosGetulio.setText("Votos getulio");
+
+        lblVotosLula.setText("Votos Lula");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(551, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(fimLabel)
-                        .addGap(544, 544, 544))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(lblVotosGetulio)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel1)
-                        .addContainerGap())))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 766, Short.MAX_VALUE)
+                        .addComponent(fimLabel)
+                        .addGap(748, 748, 748))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblVotosLula)
+                            .addComponent(Time))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(223, 223, 223)
+                .addContainerGap()
+                .addComponent(Time)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 295, Short.MAX_VALUE)
                 .addComponent(fimLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 199, Short.MAX_VALUE)
-                .addComponent(jLabel1)
+                .addGap(273, 273, 273)
+                .addComponent(lblVotosLula)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(lblVotosGetulio))
                 .addContainerGap())
         );
 
@@ -96,17 +184,23 @@ public class telaFim extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(telaFim.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        
+        
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new telaFim().setVisible(true);
+                new telaFim(1000, 1000).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Time;
     private javax.swing.JLabel fimLabel;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel lblVotosGetulio;
+    private javax.swing.JLabel lblVotosLula;
     // End of variables declaration//GEN-END:variables
+
 }

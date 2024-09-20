@@ -14,14 +14,28 @@ import javax.swing.ImageIcon;
  */
 public class Main extends javax.swing.JFrame { 
     
-    private Candidato getulioECafe = new Candidato("Getúlio Vargas", "PTB", "Café", "52", "src/images/getulio.jpg", "src/images/café.jpg");
-    private Candidato lulaEHaddad = new Candidato("Lula", "PT", "Haddad", "13", "src/images/lule.jpg", "src/images/haddad.jpg");
     
-    private String numeroDigitado = "";
+    private Candidato getulioECafe;
+    private Candidato lulaEHaddad;
+    private Candidato candidatoSelect = null;
+    private String numeroDig = "";
     
+    public Main() {
+        this(1000, 1000);
+    }
+    
+    public Main(int votosGetulio, int votosLula) {
+        initComponents();
+        
+        getulioECafe = new Candidato("Getúlio Vargas", "PTB", "Café", "52", "src/images/getulio.jpg", "src/images/café.jpg");
+        lulaEHaddad = new Candidato("Lula", "PT", "Haddad", "13", "src/images/lule.jpg", "src/images/haddad.jpg");
+        
+        getulioECafe.setVotos(votosGetulio);
+        lulaEHaddad.setVotos(votosLula);
+    }
     
     private void limparCampos() {
-    nCandidato.setText("");
+    nCandidato.setText(""); 
     nVice.setText("");
     nPartido.setText("");
     
@@ -29,51 +43,46 @@ public class Main extends javax.swing.JFrame {
     ImageVice.setIcon(null);
 }
     
-    private void verificarNumeroDigitado(String numero) {
-        Candidato candidato = null;
+    private void verificaNumDig(String numero) {
+        candidatoSelect = null;
         
         if (numero.equals(getulioECafe.getNumero())) {
-            candidato = getulioECafe;
+            candidatoSelect = getulioECafe;
         } else if (numero.equals(lulaEHaddad.getNumero())) {
-            candidato = lulaEHaddad;
+            candidatoSelect = lulaEHaddad;
         }
     
-    if (candidato != null) {
+    if (candidatoSelect != null) {
             //so atualiza os campo
-            nCandidato.setText(candidato.getNPresidente());
-            nPartido.setText(candidato.getPartido());
-            nVice.setText(candidato.getNVice());
+            nCandidato.setText(candidatoSelect.getNPresidente());
+            nPartido.setText(candidatoSelect.getPartido());
+            nVice.setText(candidatoSelect.getNVice());
 
             //vai mudar a fotinha do nosso presidas
-            String caminhoImagemPresidente = candidato.getCaminhoImagem();
+            String caminhoImagemPresidente = candidatoSelect.getCaminhoImagem();
             ImageIcon imagemPresidente = new ImageIcon(caminhoImagemPresidente);
             java.awt.Image imgPresidente = imagemPresidente.getImage();
-            java.awt.Image imgPresidenteRedimensionada = imgPresidente.getScaledInstance(Image.getWidth(), Image.getHeight(), java.awt.Image.SCALE_SMOOTH);
-            Image.setIcon(new ImageIcon(imgPresidenteRedimensionada));
+            java.awt.Image imgPresidenteRed = imgPresidente.getScaledInstance(Image.getWidth(), Image.getHeight(), java.awt.Image.SCALE_SMOOTH);
+            Image.setIcon(new ImageIcon(imgPresidenteRed));
             
             // aq muda aa fotina do vice
-            String caminhoImagemVice = candidato.getCaminhoImagemVice();
+            String caminhoImagemVice = candidatoSelect.getCaminhoImagemVice();
             ImageIcon imagemVice = new ImageIcon(caminhoImagemVice);
             java.awt.Image imgVice = imagemVice.getImage();
-            java.awt.Image imgViceRedimensionada = imgVice.getScaledInstance(ImageVice.getWidth(), ImageVice.getHeight(), java.awt.Image.SCALE_SMOOTH);
-            ImageVice.setIcon(new ImageIcon(imgViceRedimensionada));
+            java.awt.Image imgViceRed = imgVice.getScaledInstance(ImageVice.getWidth(), ImageVice.getHeight(), java.awt.Image.SCALE_SMOOTH);
+            ImageVice.setIcon(new ImageIcon(imgViceRed));
         }
+    }
     
-}
+    private void mostrarTelaFinal() {
+        telaFim telaFinal = new telaFim(getulioECafe.getVotos(), lulaEHaddad.getVotos());
+        telaFinal.setVisible(true);
+        this.dispose();
+    }
 
-    /**
-     * Creates new form tela0
-     */
-    public Main() {
-        initComponents();
-    }
-    
     private void attNum() {
-        numDig.setText(numeroDigitado);
+        numDig.setText(numeroDig);
     }
-    
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -118,7 +127,8 @@ public class Main extends javax.swing.JFrame {
         ImageVice = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new java.awt.Dimension(1265, 626));
+        setMinimumSize(new java.awt.Dimension(1700, 800));
+        setPreferredSize(new java.awt.Dimension(1700, 800));
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -129,29 +139,37 @@ public class Main extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setText("PRESIDENTE");
 
-        campoNumero.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        campoNumero.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         campoNumero.setForeground(new java.awt.Color(0, 0, 0));
-        campoNumero.setText("NÚMERO");
+        campoNumero.setText("NÚMERO:");
 
-        campoVice.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        campoVice.setForeground(new java.awt.Color(0, 0, 0));
-        campoVice.setText("VICE");
+        campoVice.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        campoVice.setForeground(new java.awt.Color(102, 102, 102));
+        campoVice.setText("VICE:");
 
-        campoNome.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        campoNome.setForeground(new java.awt.Color(0, 0, 0));
-        campoNome.setText("NOME");
+        campoNome.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        campoNome.setForeground(new java.awt.Color(102, 102, 102));
+        campoNome.setText("NOME:");
 
-        campoPartido.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        campoPartido.setForeground(new java.awt.Color(0, 0, 0));
-        campoPartido.setText("PARTIDO");
+        campoPartido.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        campoPartido.setForeground(new java.awt.Color(102, 102, 102));
+        campoPartido.setText("PARTIDO:");
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        numDig.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+
+        nCandidato.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+
+        nPartido.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+
+        nVice.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
         jLabel4.setText("APERTE A TECLA");
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel5.setText("LARANJA PARA REINICIAR ESTE VOTO");
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel6.setText("VERDE PARA CONFIRMAR ESTE VOTO");
 
         teclado.setBackground(new java.awt.Color(51, 51, 51));
@@ -256,7 +274,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        bCorrige.setBackground(new java.awt.Color(255, 51, 51));
+        bCorrige.setBackground(new java.awt.Color(255, 153, 51));
         bCorrige.setForeground(new java.awt.Color(0, 0, 0));
         bCorrige.setText("CORRIGE");
         bCorrige.addActionListener(new java.awt.event.ActionListener() {
@@ -328,7 +346,7 @@ public class Main extends javax.swing.JFrame {
         tecladoLayout.setVerticalGroup(
             tecladoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tecladoLayout.createSequentialGroup()
-                .addGap(44, 44, 44)
+                .addGap(90, 90, 90)
                 .addGroup(tecladoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(b1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(b3, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -345,14 +363,14 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(b8, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(b0, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 118, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(tecladoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bCorrige, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(bBranco, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(39, 39, 39))
             .addGroup(tecladoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tecladoLayout.createSequentialGroup()
-                    .addContainerGap(410, Short.MAX_VALUE)
+                    .addContainerGap(456, Short.MAX_VALUE)
                     .addComponent(bConfirma, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(38, 38, 38)))
         );
@@ -376,7 +394,7 @@ public class Main extends javax.swing.JFrame {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(ImageVice, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
+            .addComponent(ImageVice, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -386,62 +404,52 @@ public class Main extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(instrucoes)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(instrucoes)
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(24, 24, 24)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(24, 24, 24)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(campoNumero)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(numDig))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(campoPartido)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(nPartido))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(campoVice)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(nVice))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(campoNome)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(nCandidato))))
-                                    .addComponent(jLabel1)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(112, 112, 112)
-                                        .addComponent(jLabel2)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 256, Short.MAX_VALUE)
+                                    .addComponent(campoNumero)
+                                    .addComponent(campoPartido)
+                                    .addComponent(campoNome)
+                                    .addComponent(campoVice))
+                                .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(nVice)
+                                    .addComponent(nCandidato)
+                                    .addComponent(nPartido)
+                                    .addComponent(numDig)))
+                            .addComponent(jLabel1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(112, 112, 112)
+                                .addComponent(jLabel2)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 695, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(teclado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())))
             .addGroup(layout.createSequentialGroup()
                 .addGap(90, 90, 90)
-                .addComponent(jLabel5)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(88, 88, 88)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel6)
-                    .addContainerGap(872, Short.MAX_VALUE)))
+                    .addComponent(jLabel5))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(jLabel1)
                                 .addGap(54, 54, 54)
                                 .addComponent(jLabel2)
@@ -462,33 +470,32 @@ public class Main extends javax.swing.JFrame {
                                     .addComponent(campoPartido)
                                     .addComponent(nPartido))
                                 .addGap(110, 110, 110))
-                            .addGroup(layout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addComponent(instrucoes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(teclado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(teclado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addComponent(instrucoes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(12, 12, 12)
                 .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addGap(61, 61, 61)
+                .addComponent(jLabel6)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel5)
-                .addGap(18, 18, 18))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(553, Short.MAX_VALUE)
-                    .addComponent(jLabel6)
-                    .addGap(48, 48, 48)))
+                .addGap(74, 74, 74))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void b1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b1ActionPerformed
-         if (numeroDigitado.length() < 2) {  // Limita a 2 dígitos, por exemplo
-            numeroDigitado += "1";
+         if (numeroDig.length() < 2) {
+            numeroDig += "1";
             attNum();
-            verificarNumeroDigitado(numeroDigitado);
+            verificaNumDig(numeroDig);
             
         }
     }//GEN-LAST:event_b1ActionPerformed
@@ -496,101 +503,104 @@ public class Main extends javax.swing.JFrame {
     
     
     private void b2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b2ActionPerformed
-        if (numeroDigitado.length() < 2) {
-            numeroDigitado += "2";
+        if (numeroDig.length() < 2) {
+            numeroDig += "2";
             attNum();
-            verificarNumeroDigitado(numeroDigitado);
+            verificaNumDig(numeroDig);
         }
     }//GEN-LAST:event_b2ActionPerformed
 
     private void b3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b3ActionPerformed
-        if (numeroDigitado.length() < 2) {
-            numeroDigitado += "3";
+        if (numeroDig.length() < 2) {
+            numeroDig += "3";
             attNum();
-            verificarNumeroDigitado(numeroDigitado);
+            verificaNumDig(numeroDig);
         }
 
     }//GEN-LAST:event_b3ActionPerformed
 
     private void b4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b4ActionPerformed
-        if (numeroDigitado.length() < 2) {
-            numeroDigitado += "4";
+        if (numeroDig.length() < 2) {
+            numeroDig += "4";
             attNum();
-            verificarNumeroDigitado(numeroDigitado);
+            verificaNumDig(numeroDig);
         }
 
     }//GEN-LAST:event_b4ActionPerformed
 
     private void b5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b5ActionPerformed
-        if (numeroDigitado.length() < 2) {
-            numeroDigitado += "5";
+        if (numeroDig.length() < 2) {
+            numeroDig += "5";
             attNum();
-            verificarNumeroDigitado(numeroDigitado);
+            verificaNumDig(numeroDig);
         }
     }//GEN-LAST:event_b5ActionPerformed
 
     private void b6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b6ActionPerformed
-        if (numeroDigitado.length() < 2) {
-            numeroDigitado += "6";
+        if (numeroDig.length() < 2) {
+            numeroDig += "6";
             attNum();
-            verificarNumeroDigitado(numeroDigitado);
+            verificaNumDig(numeroDig);
         }
     }//GEN-LAST:event_b6ActionPerformed
 
     private void b7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b7ActionPerformed
-        if (numeroDigitado.length() < 2) {
-            numeroDigitado += "7";
+        if (numeroDig.length() < 2) {
+            numeroDig += "7";
             attNum();
-            verificarNumeroDigitado(numeroDigitado);
+            verificaNumDig(numeroDig);
         }
     }//GEN-LAST:event_b7ActionPerformed
 
     private void b8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b8ActionPerformed
-        if (numeroDigitado.length() < 2) {
-            numeroDigitado += "8";
+        if (numeroDig.length() < 2) {
+            numeroDig += "8";
             attNum();
-            verificarNumeroDigitado(numeroDigitado);
+            verificaNumDig(numeroDig);
         }
     }//GEN-LAST:event_b8ActionPerformed
 
     private void b9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b9ActionPerformed
-        if (numeroDigitado.length() < 2) {
-            numeroDigitado += "9";
+        if (numeroDig.length() < 2) {
+            numeroDig += "9";
             attNum();
-            verificarNumeroDigitado(numeroDigitado);
+            verificaNumDig(numeroDig);
         }
     }//GEN-LAST:event_b9ActionPerformed
 
     private void b0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b0ActionPerformed
-        if (numeroDigitado.length() < 2) {
-            numeroDigitado += "0";
+        if (numeroDig.length() < 2) {
+            numeroDig += "0";
             attNum();
-            verificarNumeroDigitado(numeroDigitado);
+            verificaNumDig(numeroDig);
         }
     }//GEN-LAST:event_b0ActionPerformed
 
     private void bCorrigeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCorrigeActionPerformed
-        numeroDigitado = "";  // Limpa o número
-        campoNumero.setText("NÚMERO");
-        campoNome.setText("NOME");
+        numeroDig = "";
+        campoNumero.setText("NÚMERO:");
+        campoNome.setText("NOME:");
         limparCampos();
         attNum();
     }//GEN-LAST:event_bCorrigeActionPerformed
 
     private void bConfirmaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bConfirmaActionPerformed
-        numeroDigitado = "";
+        numeroDig = "";
         campoNumero.setText("");
         limparCampos();
         
-        this.dispose(); 
-        telaFim telaFinal = new telaFim(); 
-        telaFinal.setVisible(true);
+        if (candidatoSelect != null) {
+            candidatoSelect.addVoto(); 
+            System.out.println("Voto registrado para: " + candidatoSelect.getNPresidente());
+        }
+         mostrarTelaFinal();
+        
     }//GEN-LAST:event_bConfirmaActionPerformed
 
     private void bBrancoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBrancoActionPerformed
               
         this.dispose(); 
-        telaFim telaFinal = new telaFim(); 
+        telaFim telaFinal = new telaFim(getulioECafe.getVotos(), lulaEHaddad.getVotos()); 
         telaFinal.setVisible(true);
     }//GEN-LAST:event_bBrancoActionPerformed
 
