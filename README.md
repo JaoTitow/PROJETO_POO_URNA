@@ -1,5 +1,5 @@
 <div align ="center">
-  <img src="https://github.com/JavaElects/PROJETO_POO_URNA/blob/main/Progama/Urna/src/br/edu/images/Logo.png" width = "500px"/>
+  <img src="https://github.com/JaoTitow/Urna2/blob/main/icons/Logo.png" width = "500px"/>
   </div>
 
 # Sobre:
